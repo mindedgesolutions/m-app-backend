@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -73,8 +74,10 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
+        if (Product::where('category_id', $id)->count() > 0) {
+            return response()->json(['message' => 'Category has associated products and cannot be deleted'], Response::HTTP_BAD_REQUEST);
+        }
         // Check orders - if exists, don't allow delete
-        // Delete all listings from products table
         $subs = SubCategory::where('category_id', $id)->get();
         foreach ($subs as $sub) {
             $sub->delete();
@@ -89,11 +92,14 @@ class CategoryController extends Controller
 
     public function toggleStatus(Request $request, $id)
     {
+        if (Product::where('category_id', $id)->count() > 0) {
+            return response()->json(['message' => 'Category has associated products and cannot be deactivated'], Response::HTTP_BAD_REQUEST);
+        }
+        // Check orders - if exists, don't allow deactivate
         $subs = SubCategory::where('category_id', $id)->get();
         foreach ($subs as $sub) {
             $sub->update(['is_active' => $request->is_active]);
         }
-        // Deactivate all listings from products table
 
         Category::whereId($id)->update(['is_active' => $request->is_active]);
 

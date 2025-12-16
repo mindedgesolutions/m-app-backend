@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SubCategory extends Model
+class Product extends Model
 {
     protected $fillable = [
         'category_id',
+        'sub_category_id',
         'name',
         'slug',
         'description',
-        'library',
-        'icon',
         'is_active',
     ];
 
@@ -21,8 +20,13 @@ class SubCategory extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    public function products()
+    public function subCategory()
     {
-        return $this->hasMany(Product::class, 'sub_category_id', 'id');
+        return $this->belongsTo(SubCategory::class, 'sub_category_id', 'id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
 }
