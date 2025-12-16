@@ -18,7 +18,7 @@ class CategoryController extends Controller
     {
         $search = request()->query('search');
 
-        $data = Category::when($search, function ($query) use ($search) {
+        $data = Category::with('subCategories')->when($search, function ($query) use ($search) {
             $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
         })
             ->orderBy('id', 'desc')
