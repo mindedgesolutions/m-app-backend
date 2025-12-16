@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,11 +17,23 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('me', 'me');
         Route::post('logout', 'logout');
     });
-    Route::prefix('admin')->group(function () {
+
+    // Admin auth routes start -------------------------
+    Route::middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::apiResource('categories', CategoryController::class)->except(['show']);
         Route::post('categories/toggle-status/{id}', [CategoryController::class, 'toggleStatus']);
 
         Route::apiResource('sub-categories', SubCategoryController::class)->except(['show']);
         Route::post('sub-categories/toggle-status/{id}', [SubCategoryController::class, 'toggleStatus']);
     });
+    // Admin auth routes end -------------------------
+
+    // Common auth routes for all roles start -------------------------
+    Route::apiResource('products', ProductController::class)->except(['show']);
+    Route::post('products/toggle-status/{id}', [ProductController::class, 'toggleStatus']);
+    // Common auth routes for all roles end -------------------------
+
+    // User routes start -------------------------
+    Route::middleware(['role:user'])->group(function () {});
+    // User routes end -------------------------
 });

@@ -12,6 +12,11 @@ class Product extends Model
         'name',
         'slug',
         'description',
+        'brand',
+        'price',
+        'stock',
+        'refurbished',
+        'how_old',
         'is_active',
     ];
 

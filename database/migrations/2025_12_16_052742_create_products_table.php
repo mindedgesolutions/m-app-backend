@@ -17,7 +17,12 @@ return new class extends Migration
             $table->foreignId('sub_category_id')->constrained('sub_categories');
             $table->string('name');
             $table->string('slug');
-            $table->text('description')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('price');
+            $table->integer('stock')->default(0);
+            $table->boolean('refurbished')->default(false);
+            $table->integer('how_old')->default(1);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
