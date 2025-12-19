@@ -110,4 +110,16 @@ class SubCategoryController extends Controller
 
         return response()->json(['message' => 'success'], Response::HTTP_OK);
     }
+
+    // -------------------------------
+
+    public function all()
+    {
+        $data = SubCategory::where('is_active', true)
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return response()->json(['data' => $data], Response::HTTP_OK);
+    }
 }

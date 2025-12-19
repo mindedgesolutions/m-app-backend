@@ -21,10 +21,18 @@ Route::middleware(['auth:api'])->group(function () {
     // Admin auth routes start -------------------------
     Route::middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::apiResource('categories', CategoryController::class)->except(['show']);
-        Route::post('categories/toggle-status/{id}', [CategoryController::class, 'toggleStatus']);
+
+        Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+            Route::post('toggle-status/{id}', 'toggleStatus');
+            Route::get('all', 'all');
+        });
 
         Route::apiResource('sub-categories', SubCategoryController::class)->except(['show']);
-        Route::post('sub-categories/toggle-status/{id}', [SubCategoryController::class, 'toggleStatus']);
+
+        Route::controller(SubCategoryController::class)->prefix('sub-categories')->group(function () {
+            Route::post('toggle-status/{id}', 'toggleStatus');
+            Route::get('all', 'all');
+        });
     });
     // Admin auth routes end -------------------------
 

@@ -105,4 +105,16 @@ class CategoryController extends Controller
 
         return response()->json(['message' => 'success'], Response::HTTP_OK);
     }
+
+    // -------------------------------
+
+    public function all()
+    {
+        $data = Category::where('is_active', true)
+            ->select('id', 'name')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return response()->json(['data' => $data], Response::HTTP_OK);
+    }
 }
